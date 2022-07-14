@@ -1,15 +1,16 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
+const _ = require("lodash");
 
 const port = 3000;
 
 const homeStartingContent =
-  "The French government initially blamed Liverpool fans and fake tickets for the crowd chaos that led to supporters being tear-gassed and robbed. But a Senate report has found authorities blamed them unfairly. Dysfunctional mistakes were made at every level, it said. Two Senate committees investigated what went wrong on the night of the Champions League final between Liverpool and Real Madrid on 28 May, taking evidence from Liverpool fan and club representatives as well as French officials. Liverpool fans have told the BBC that the problems were caused by digital tickets not working properly on the night, leading to problems at the turnstiles.";
+  "Football is a family of team sports that involve, to varying degrees, kicking a ball to score a goal. Unqualified, the word football normally means the form of football that is the most popular where the word is used. Sports commonly called football include association football (known as soccer in North America and Oceania); gridiron football (specifically American football or Canadian football); Australian rules football; rugby union and rugby league; and Gaelic football. These various forms of football share to varying extent common origins and are known as football codes.";
 const aboutContent =
-  "Hac habitasse platea dictumst vestibulum rhoncus est pellentesque. Dictumst vestibulum rhoncus est pellentesque elit ullamcorper. Non diam phasellus vestibulum lorem sed. Platea dictumst quisque sagittis purus sit. Egestas sed sed risus pretium quam vulputate dignissim suspendisse. Mauris in aliquam sem fringilla. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Amet massa vitae tortor condimentum lacinia quis vel eros. Enim ut tellus elementum sagittis vitae. Mauris ultrices eros in cursus turpis massa tincidunt dui.";
+  "We’re impartial and independent, and every day we create distinctive, world-class programmes and content which inform, educate and entertain millions of people in the UK and around the world.";
 const contactContent =
-  "Scelerisque eleifend donec pretium vulputate sapien. Rhoncus urna neque viverra justo nec ultrices. Arcu dui vivamus arcu felis bibendum. Consectetur adipiscing elit duis tristique. Risus viverra adipiscing at in tellus integer feugiat. Sapien nec sagittis aliquam malesuada bibendum arcu vitae. Consequat interdum varius sit amet mattis. Iaculis nunc sed augue lacus. Interdum posuere lorem ipsum dolor sit amet consectetur adipiscing elit. Pulvinar elementum integer enim neque. Ultrices gravida dictum fusce ut placerat orci nulla. Mauris in aliquam sem fringilla ut morbi tincidunt. Tortor posuere ac ut consequat semper viverra nam libero.";
+  "To contact the BBC Press Office please call 020-7765 5900 (for corporate and out-of-hours queries) or email press.office@bbc.co.uk";
 
 const app = express();
 
@@ -18,8 +19,13 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+let posts = [];
+
 app.get("/", (req, res) => {
-  res.render("home", { startingContent: homeStartingContent });
+  res.render("home", {
+    startingContent: homeStartingContent,
+    posts: posts,
+  });
 });
 
 app.get("/about", (req, res) => {
@@ -32,6 +38,31 @@ app.get("/contact", (req, res) => {
 
 app.get("/compose", (req, res) => {
   res.render("compose");
+});
+
+app.post("/compose", (req, res) => {
+  const post = {
+    title: req.body.postTitle,
+    content: req.body.postBody,
+  };
+
+  posts.push(post);
+
+  res.redirect("/");
+});
+
+app.get("/posts/:postName", (req, res) => {
+  const requestedTitle = _.lowerCase(req.params.postName);
+
+  posts.forEach((post) => {
+    const storedTitle = _.lowerCase(post.title);
+    if (requestedTitle === storedTitle) {
+      res.render("post", {
+        title: post.title,
+        content: post.content,
+      });
+    }
+  });
 });
 
 app.listen(port, () => {

@@ -6,10 +6,12 @@ body {
     rgba(148, 187, 233, 1) 100%
   );
 }
+
 .nav-inner {
   padding-top: 4.4rem;
   padding-bottom: 4.4rem;
 }
+
 .navbar {
   background-color: rgba(0, 0, 0, 0.1);
   padding-top: 1rem;
@@ -20,18 +22,35 @@ body {
   font-size: 0.75rem;
   letter-spacing: 0.3rem;
 }
+
 .navbar-text {
   font-size: 1.2rem;
   font-weight: bold;
   margin: 0;
   padding: 0;
 }
+
 .navbar-nav li a:hover {
   color: #fff !important;
 }
+
 .navbar-collapse {
   flex-grow: 0;
 }
+
+.form-label {
+  font-weight: bold;
+}
+
+.btn {
+  opacity: 0.6;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  opacity: 1;
+}
+
 .footer-padding {
   padding-bottom: 3.75rem;
 }
